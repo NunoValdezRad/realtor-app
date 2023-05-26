@@ -4,6 +4,7 @@ export declare class SignupDto {
     phone: string;
     email: string;
     password: string;
+    productKey?: string;
 }
 export declare class SigninDto {
     email: string;

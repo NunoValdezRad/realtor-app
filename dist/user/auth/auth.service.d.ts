@@ -13,9 +13,9 @@ interface SigninParams {
 export declare class AuthService {
     private readonly prismaService;
     constructor(prismaService: PrismaService);
-    signup({ email, password, name, phone }: SignupParams): Promise<string>;
-    signin({ email, password }: SigninParams): Promise<string>;
     private generateJWT;
+    signup({ email, password, name, phone }: SignupParams, userType: UserType): Promise<string>;
+    signin({ email, password }: SigninParams): Promise<string>;
     generateProductKey(email: string, userType: UserType): Promise<string>;
 }
 export {};

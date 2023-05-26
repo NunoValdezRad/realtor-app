@@ -15,27 +15,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const bcrypt = require("bcryptjs");
 const auth_dto_1 = require("../dto/auth.dto.ts/auth.dto");
+const client_1 = require("@prisma/client");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    signup(body) {
-        return this.authService.signup(body);
+    async signup(body, userType) {
+        if (userType !== client_1.UserType.BUYER) {
+            if (!body.productKey) {
+                throw new common_1.UnauthorizedException();
+            }
+            const validProductKey = `${body.email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`;
+            const isValidProductKey = await bcrypt.compare(validProductKey, body.productKey);
+            if (!isValidProductKey) {
+                throw new common_1.UnauthorizedException();
+            }
+        }
+        return this.authService.signup(body, userType);
     }
     signin(body) {
         return this.authService.signin(body);
     }
-    generateProductKey(body) {
-        return this.authService.generateProductKey(body.email, body.userType);
+    generateProductKey({ email, userType }) {
+        return this.authService.generateProductKey(email, userType);
     }
 };
 __decorate([
     (0, common_1.Post)('/signup/:userType'),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('userType', new common_1.ParseEnumPipe(client_1.UserType))),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.SignupDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [auth_dto_1.SignupDto, String]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signup", null);
 __decorate([
     (0, common_1.Post)('/signin'),
@@ -45,7 +58,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "signin", null);
 __decorate([
-    (0, common_1.Post)("/key"),
+    (0, common_1.Post)('/key'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_dto_1.GenerateProductKeyDto]),

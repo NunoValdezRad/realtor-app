@@ -21,7 +21,9 @@ __decorate([
 ], SignupDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Matches)(/^(?:(?:\+|00)351)?\s*9[1236]\d{7}$/, { message: "Phone must be a Portuguese valid phone number" }),
+    (0, class_validator_1.Matches)(/^(?:(?:\+|00)351)?\s*9[1236]\d{7}$/, {
+        message: 'Phone must be a Portuguese valid phone number',
+    }),
     __metadata("design:type", String)
 ], SignupDto.prototype, "phone", void 0);
 __decorate([
@@ -33,6 +35,12 @@ __decorate([
     (0, class_validator_1.MinLength)(5),
     __metadata("design:type", String)
 ], SignupDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], SignupDto.prototype, "productKey", void 0);
 exports.SignupDto = SignupDto;
 class SigninDto {
 }

@@ -14,16 +14,20 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const client_1 = require("@prisma/client");
 let AuthService = class AuthService {
     constructor(prismaService) {
         this.prismaService = prismaService;
     }
-    async signup({ email, password, name, phone }) {
+    async generateJWT(name, id) {
+        return jwt.sign({ name, id }, process.env.JSON_TOKEN_KEY, {
+            expiresIn: 36000000,
+        });
+    }
+    async signup({ email, password, name, phone }, userType) {
         const userExists = await this.prismaService.user.findUnique({
             where: {
-                email
-            }
+                email,
+            },
         });
         if (userExists) {
             throw new common_1.ConflictException();
@@ -35,15 +39,15 @@ let AuthService = class AuthService {
                 name,
                 phone,
                 password: hashedPassword,
-                user_type: client_1.UserType.BUYER
-            }
+                user_type: userType,
+            },
         });
         console.log(user);
         return this.generateJWT(user.name, user.id);
     }
     async signin({ email, password }) {
         const existingUser = await this.prismaService.user.findUnique({
-            where: { email }
+            where: { email },
         });
         console.log(existingUser);
         if (!existingUser) {
@@ -56,9 +60,6 @@ let AuthService = class AuthService {
         }
         const token = await this.generateJWT(existingUser.name, existingUser.id);
         return token;
-    }
-    async generateJWT(name, id) {
-        return jwt.sign({ name, id }, process.env.JSON_TOKEN_KEY, { expiresIn: 36000000 });
     }
     generateProductKey(email, userType) {
         const string = `${email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`;
