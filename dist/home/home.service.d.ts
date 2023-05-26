@@ -22,11 +22,24 @@ interface CreateHomeParams {
     landSize: number;
     propertyType: PropertyType;
 }
+interface UpdateHomeParams {
+    id?: number;
+    address?: string;
+    numberOfBedrooms?: number;
+    numberOfBathrooms?: number;
+    city?: string;
+    listed_date?: Date;
+    price?: number;
+    landSize?: number;
+    propertyType?: PropertyType;
+}
 export declare class HomeService {
     private readonly prismaService;
     constructor(prismaService: PrismaService);
     getAllHomes(): Promise<import(".prisma/client").Home[]>;
     getHomeById(filter: GetHomesParam): Promise<HomeResponseDto[]>;
     createHome({ address, numberOfBathrooms, numberOfBedrooms, city, landSize, propertyType, images, price, }: CreateHomeParams): Promise<HomeResponseDto>;
+    updateHomeById(id: number, data: UpdateHomeParams): Promise<HomeResponseDto>;
+    deleteHouseById(id: number): Promise<void>;
 }
 export {};

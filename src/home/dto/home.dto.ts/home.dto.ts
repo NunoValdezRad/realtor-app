@@ -6,6 +6,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   ValidateNested,
@@ -105,4 +106,43 @@ export class CreateHomeDto {
 
   @IsEnum(PropertyType)
   propertyType: PropertyType;
+}
+
+export class UpdateHomeDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  address?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  numberOfBedrooms?: number;
+
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  numberOfBathrooms?: number;
+
+  @IsString()
+  @IsOptional()
+  city?: string;
+
+  @IsDate()
+  @IsOptional()
+  listed_date?: Date;
+
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  price?: number;
+
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  landSize?: number;
+
+  @IsEnum(PropertyType)
+  @IsOptional()
+  propertyType?: PropertyType;
 }

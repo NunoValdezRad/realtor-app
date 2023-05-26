@@ -10,7 +10,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { CreateHomeDto, HomeResponseDto } from './dto/home.dto.ts/home.dto';
+import {
+  CreateHomeDto,
+  HomeResponseDto,
+  UpdateHomeDto,
+} from './dto/home.dto.ts/home.dto';
 import { PropertyType } from '@prisma/client';
 
 @Controller('home')
@@ -51,10 +55,17 @@ export class HomeController {
     return this.homeService.createHome(body);
   }
   @Put(':id')
-  updateHome() {
-    return {};
+  updateHome(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateHomeDto,
+  ) {
+    return this.homeService.updateHomeById(id, body);
   }
 
   @Delete(':id')
-  deleteHome() {}
+  deleteHome(@Param('id', ParseIntPipe) id: number) {
+    return this.homeService.deleteHouseById(id);
+  }
 }
+
+// Parei aqui porque hoje (dia 26 de Maio) soube que vou para o Rotaro, outro projeto da Rad, e vou colocar isto em pausa!

@@ -33,4 +33,14 @@ export declare class CreateHomeDto {
     landSize: number;
     propertyType: PropertyType;
 }
+export declare class UpdateHomeDto {
+    address?: string;
+    numberOfBedrooms?: number;
+    numberOfBathrooms?: number;
+    city?: string;
+    listed_date?: Date;
+    price?: number;
+    landSize?: number;
+    propertyType?: PropertyType;
+}
 export {};

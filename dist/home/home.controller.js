@@ -33,10 +33,12 @@ let HomeController = class HomeController {
     createHome(body) {
         return this.homeService.createHome(body);
     }
-    updateHome() {
-        return {};
+    updateHome(id, body) {
+        return this.homeService.updateHomeById(id, body);
     }
-    deleteHome() { }
+    deleteHome(id) {
+        return this.homeService.deleteHouseById(id);
+    }
 };
 __decorate([
     (0, common_1.Get)(),
@@ -63,14 +65,17 @@ __decorate([
 ], HomeController.prototype, "createHome", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, home_dto_1.UpdateHomeDto]),
     __metadata("design:returntype", void 0)
 ], HomeController.prototype, "updateHome", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], HomeController.prototype, "deleteHome", null);
 HomeController = __decorate([

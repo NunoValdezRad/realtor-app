@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateHomeDto = exports.HomeResponseDto = void 0;
+exports.UpdateHomeDto = exports.CreateHomeDto = exports.HomeResponseDto = void 0;
 const client_1 = require("@prisma/client");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
@@ -136,4 +136,52 @@ __decorate([
     __metadata("design:type", String)
 ], CreateHomeDto.prototype, "propertyType", void 0);
 exports.CreateHomeDto = CreateHomeDto;
+class UpdateHomeDto {
+}
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateHomeDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsPositive)(),
+    __metadata("design:type", Number)
+], UpdateHomeDto.prototype, "numberOfBedrooms", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsPositive)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], UpdateHomeDto.prototype, "numberOfBathrooms", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateHomeDto.prototype, "city", void 0);
+__decorate([
+    (0, class_validator_1.IsDate)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Date)
+], UpdateHomeDto.prototype, "listed_date", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsPositive)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], UpdateHomeDto.prototype, "price", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsPositive)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], UpdateHomeDto.prototype, "landSize", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(client_1.PropertyType),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateHomeDto.prototype, "propertyType", void 0);
+exports.UpdateHomeDto = UpdateHomeDto;
 //# sourceMappingURL=home.dto.js.map

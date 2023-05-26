@@ -62,6 +62,30 @@ let HomeService = class HomeService {
         await this.prismaService.image.createMany({ data: homeImages });
         return new home_dto_1.HomeResponseDto(home);
     }
+    async updateHomeById(id, data) {
+        const home = this.prismaService.home.findUnique({
+            where: { id },
+        });
+        if (!home)
+            throw new common_1.NotFoundException();
+        const updatedHome = await this.prismaService.home.update({
+            where: { id },
+            data,
+        });
+        return new home_dto_1.HomeResponseDto(updatedHome);
+    }
+    async deleteHouseById(id) {
+        await this.prismaService.image.deleteMany({
+            where: {
+                home_id: id,
+            },
+        });
+        await this.prismaService.home.delete({
+            where: {
+                id,
+            },
+        });
+    }
 };
 HomeService = __decorate([
     (0, common_1.Injectable)(),
