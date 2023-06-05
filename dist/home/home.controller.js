@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const home_service_1 = require("./home.service");
 const home_dto_1 = require("./dto/home.dto.ts/home.dto");
 const client_1 = require("@prisma/client");
+const user_decorator_1 = require("../user/decorators/user.decorator");
 let HomeController = class HomeController {
     constructor(homeService) {
         this.homeService = homeService;
@@ -30,8 +31,8 @@ let HomeController = class HomeController {
         const filters = Object.assign(Object.assign(Object.assign({}, (city && { city })), (price && { price })), (propertyType && { propertyType }));
         return this.homeService.getHomeById(filters);
     }
-    createHome(body) {
-        return this.homeService.createHome(body);
+    createHome(body, user) {
+        return user;
     }
     updateHome(id, body) {
         return this.homeService.updateHomeById(id, body);
@@ -41,13 +42,13 @@ let HomeController = class HomeController {
     }
 };
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], HomeController.prototype, "getAllHomes", null);
 __decorate([
-    (0, common_1.Get)(''),
+    (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Query)('city')),
     __param(1, (0, common_1.Query)('minPrice')),
     __param(2, (0, common_1.Query)('maxPrice')),
@@ -59,8 +60,9 @@ __decorate([
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [home_dto_1.CreateHomeDto]),
+    __metadata("design:paramtypes", [home_dto_1.CreateHomeDto, Object]),
     __metadata("design:returntype", void 0)
 ], HomeController.prototype, "createHome", null);
 __decorate([

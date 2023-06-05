@@ -6,7 +6,7 @@ export declare class HomeController {
     constructor(homeService: HomeService);
     getAllHomes(): Promise<import(".prisma/client").Home[]>;
     getHomeById(city?: string, minPrice?: string, maxPrice?: string, propertyType?: PropertyType): Promise<HomeResponseDto[]>;
-    createHome(body: CreateHomeDto): Promise<HomeResponseDto>;
+    createHome(body: CreateHomeDto, user: any): any;
     updateHome(id: number, body: UpdateHomeDto): Promise<HomeResponseDto>;
     deleteHome(id: number): Promise<void>;
 }

@@ -16,17 +16,18 @@ import {
   UpdateHomeDto,
 } from './dto/home.dto.ts/home.dto';
 import { PropertyType } from '@prisma/client';
+import { User } from 'src/user/decorators/user.decorator';
 
 @Controller('home')
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
-  @Get()
+  @Get('/')
   getAllHomes() {
     return this.homeService.getAllHomes();
   }
 
-  @Get('')
+  @Get(':id')
   getHomeById(
     @Query('city') city?: string,
     @Query('minPrice') minPrice?: string,
@@ -51,8 +52,9 @@ export class HomeController {
   }
 
   @Post()
-  createHome(@Body() body: CreateHomeDto) {
+  createHome(@Body() body: CreateHomeDto, @User() user) {
     return this.homeService.createHome(body);
+    // return user;
   }
   @Put(':id')
   updateHome(

@@ -16,7 +16,7 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const bcrypt = require("bcryptjs");
-const auth_dto_1 = require("../dto/auth.dto.ts/auth.dto");
+const auth_dto_1 = require("../dtos/auth.dto.ts/auth.dto");
 const client_1 = require("@prisma/client");
 let AuthController = class AuthController {
     constructor(authService) {

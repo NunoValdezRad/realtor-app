@@ -14,7 +14,7 @@ import {
   GenerateProductKeyDto,
   SigninDto,
   SignupDto,
-} from '../dto/auth.dto.ts/auth.dto';
+} from '../dtos/auth.dto.ts/auth.dto';
 import { UserType } from '@prisma/client';
 
 @Controller('auth')

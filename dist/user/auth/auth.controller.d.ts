@@ -1,5 +1,5 @@
 import { AuthService } from './auth.service';
-import { GenerateProductKeyDto, SigninDto, SignupDto } from '../dto/auth.dto.ts/auth.dto';
+import { GenerateProductKeyDto, SigninDto, SignupDto } from '../dtos/auth.dto.ts/auth.dto';
 import { UserType } from '@prisma/client';
 export declare class AuthController {
     private readonly authService;
