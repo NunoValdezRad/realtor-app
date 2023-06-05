@@ -29,6 +29,7 @@ export class AuthService {
     { email, password, name, phone }: SignupParams,
     userType: UserType,
   ) {
+    console.log('entramos no signup');
     const userExists = await this.prismaService.user.findUnique({
       where: {
         email,
@@ -36,7 +37,7 @@ export class AuthService {
     });
 
     if (userExists) {
-      throw new ConflictException();
+      throw new ConflictException('User already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

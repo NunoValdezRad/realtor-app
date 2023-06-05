@@ -51,6 +51,6 @@ export class AuthController {
 
   @Post('/key')
   generateProductKey(@Body() { email, userType }: GenerateProductKeyDto) {
-    return this.authService.generateProductKey(email, userType); //podia user directamente o body, ficaria assim: @Body body: GenerateProductKeyDto
+    return this.authService.generateProductKey(email, userType); //podia user directamente o body, ficaria assim: @Body body: GenerateProductKeyDto, e passaria como parametros do metodo generateProductKey(body.email, body.userType)
   }
 }

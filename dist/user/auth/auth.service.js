@@ -24,13 +24,14 @@ let AuthService = class AuthService {
         });
     }
     async signup({ email, password, name, phone }, userType) {
+        console.log('entramos no signup');
         const userExists = await this.prismaService.user.findUnique({
             where: {
                 email,
             },
         });
         if (userExists) {
-            throw new common_1.ConflictException();
+            throw new common_1.ConflictException('User already exists');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await this.prismaService.user.create({

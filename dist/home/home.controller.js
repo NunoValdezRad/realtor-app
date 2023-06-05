@@ -32,12 +32,23 @@ let HomeController = class HomeController {
         return this.homeService.getHomeById(filters);
     }
     createHome(body, user) {
-        return user;
+        console.log(user);
+        return this.homeService.createHome(body, user.id);
     }
-    updateHome(id, body) {
+    async updateHome(id, user, body) {
+        const realtor = await this.homeService.getRealtorByHomeId(id);
+        if (realtor.id !== user.id) {
+            throw new common_1.UnauthorizedException();
+        }
         return this.homeService.updateHomeById(id, body);
     }
-    deleteHome(id) {
+    async deleteHome(id, user) {
+        console.log(id);
+        const realtor = await this.homeService.getRealtorByHomeId(id);
+        if (realtor.id !== user.id) {
+            throw new common_1.UnauthorizedException('nao podes apagar!');
+        }
+        console.log('foi-se');
         return this.homeService.deleteHouseById(id);
     }
 };
@@ -68,17 +79,19 @@ __decorate([
 __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, home_dto_1.UpdateHomeDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, Object, home_dto_1.UpdateHomeDto]),
+    __metadata("design:returntype", Promise)
 ], HomeController.prototype, "updateHome", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, user_decorator_1.User)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
 ], HomeController.prototype, "deleteHome", null);
 HomeController = __decorate([
     (0, common_1.Controller)('home'),

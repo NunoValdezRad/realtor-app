@@ -38,8 +38,14 @@ export declare class HomeService {
     constructor(prismaService: PrismaService);
     getAllHomes(): Promise<import(".prisma/client").Home[]>;
     getHomeById(filter: GetHomesParam): Promise<HomeResponseDto[]>;
-    createHome({ address, numberOfBathrooms, numberOfBedrooms, city, landSize, propertyType, images, price, }: CreateHomeParams): Promise<HomeResponseDto>;
+    createHome({ address, numberOfBathrooms, numberOfBedrooms, city, landSize, propertyType, images, price, }: CreateHomeParams, userId: number): Promise<HomeResponseDto>;
     updateHomeById(id: number, data: UpdateHomeParams): Promise<HomeResponseDto>;
     deleteHouseById(id: number): Promise<void>;
+    getRealtorByHomeId(id: number): Promise<{
+        name: string;
+        id: number;
+        email: string;
+        phone: string;
+    }>;
 }
 export {};

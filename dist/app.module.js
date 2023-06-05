@@ -13,13 +13,21 @@ const app_service_1 = require("./app.service");
 const user_module_1 = require("./user/user.module");
 const prisma_module_1 = require("./prisma/prisma.module");
 const home_module_1 = require("./home/home.module");
+const core_1 = require("@nestjs/core");
+const user_interceptor_1 = require("./user/interceptors/user.interceptor");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [user_module_1.UserModule, prisma_module_1.PrismaModule, home_module_1.HomeModule],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [
+            app_service_1.AppService,
+            {
+                provide: core_1.APP_INTERCEPTOR,
+                useClass: user_interceptor_1.UserInterceptor,
+            },
+        ],
     })
 ], AppModule);
 exports.AppModule = AppModule;
