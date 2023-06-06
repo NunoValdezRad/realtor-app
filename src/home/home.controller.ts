@@ -108,6 +108,7 @@ export class HomeController {
     return this.homeService.inquire(user, homeId, message);
   }
 
+  //Messages => for the realtor to see all msg, he have to signIn, and pass the token in the header, and the ID on the url should be the homeID
   @Roles(UserType.REALTOR)
   @Get('/:id/messages')
   async getHomeMessages(
@@ -127,3 +128,7 @@ export class HomeController {
 
 // 1- Buyer sends message to a realtor
 // 2- Realtor gets all messages
+
+// token of a REALTOR =>  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTnVub1YiLCJpZCI6MjgsImlhdCI6MTY4NjA2ODEwNSwiZXhwIjoxNzIyMDY4MTA1fQ.EU5UCNpCTeYicV9CZfzP9vQCN20043gYOJprvCoCgGA
+
+// token of a BUYER =>  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTnVub0J1eWVyIiwiaWQiOjI5LCJpYXQiOjE2ODYwNjgzNjIsImV4cCI6MTcyMjA2ODM2Mn0.Bdpj4WJglOeUUvRVAyH_lhYbCW3vDaC0OKsX-NbA-Kg
