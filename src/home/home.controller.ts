@@ -117,7 +117,7 @@ export class HomeController {
     const realtor = await this.homeService.getRealtorByHomeId(id);
 
     if (realtor.id !== user.id) {
-      throw new UnauthorizedException('Nop, these messages were not for you');
+      throw new UnauthorizedException('Nop, these messages are not for you');
     }
     console.log({ user, realtor });
 

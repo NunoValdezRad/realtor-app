@@ -62,6 +62,6 @@ export class AuthGuard implements CanActivate {
 (Reflector allows us to use the Metadata we have in this "store" )
 */
 
-    return false;
+    // return false;
   }
 }

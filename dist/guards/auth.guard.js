@@ -51,7 +51,6 @@ let AuthGuard = class AuthGuard {
             }
         }
         return true;
-        return false;
     }
 };
 AuthGuard = __decorate([
