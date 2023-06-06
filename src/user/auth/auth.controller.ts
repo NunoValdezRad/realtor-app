@@ -16,6 +16,8 @@ import {
   SignupDto,
 } from '../dtos/auth.dto.ts/auth.dto';
 import { UserType } from '@prisma/client';
+import { userInfo } from 'os';
+import { User, UserInfo } from '../decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -52,5 +54,10 @@ export class AuthController {
   @Post('/key')
   generateProductKey(@Body() { email, userType }: GenerateProductKeyDto) {
     return this.authService.generateProductKey(email, userType); //podia user directamente o body, ficaria assim: @Body body: GenerateProductKeyDto, e passaria como parametros do metodo generateProductKey(body.email, body.userType)
+  }
+
+  @Get('/me')
+  me(@User() user: UserInfo) {
+    return user;
   }
 }

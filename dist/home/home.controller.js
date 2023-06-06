@@ -14,10 +14,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomeController = void 0;
 const common_1 = require("@nestjs/common");
+const client_1 = require("@prisma/client");
 const home_service_1 = require("./home.service");
 const home_dto_1 = require("./dto/home.dto.ts/home.dto");
-const client_1 = require("@prisma/client");
+const client_2 = require("@prisma/client");
 const user_decorator_1 = require("../user/decorators/user.decorator");
+const auth_guard_1 = require("../guards/auth.guard");
+const roles_decorator_1 = require("../decorators/roles.decorator");
 let HomeController = class HomeController {
     constructor(homeService) {
         this.homeService = homeService;
@@ -32,7 +35,6 @@ let HomeController = class HomeController {
         return this.homeService.getHomeById(filters);
     }
     createHome(body, user) {
-        console.log(user);
         return this.homeService.createHome(body, user.id);
     }
     async updateHome(id, user, body) {
@@ -43,12 +45,11 @@ let HomeController = class HomeController {
         return this.homeService.updateHomeById(id, body);
     }
     async deleteHome(id, user) {
-        console.log(id);
         const realtor = await this.homeService.getRealtorByHomeId(id);
         if (realtor.id !== user.id) {
             throw new common_1.UnauthorizedException('nao podes apagar!');
         }
-        console.log('foi-se');
+        console.log('oh, não! apagámos a casa! foi-se :...X ');
         return this.homeService.deleteHouseById(id);
     }
 };
@@ -69,6 +70,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], HomeController.prototype, "getHomeById", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserType.REALTOR, client_1.UserType.ADMIN),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, user_decorator_1.User)()),

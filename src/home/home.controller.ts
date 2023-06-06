@@ -9,7 +9,9 @@ import {
   Put,
   Query,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
+import { UserType } from '@prisma/client';
 import { HomeService } from './home.service';
 import {
   CreateHomeDto,
@@ -18,6 +20,8 @@ import {
 } from './dto/home.dto.ts/home.dto';
 import { PropertyType } from '@prisma/client';
 import { User, UserInfo } from 'src/user/decorators/user.decorator';
+import { AuthGuard } from '../guards/auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('home')
 export class HomeController {
@@ -52,9 +56,11 @@ export class HomeController {
     return this.homeService.getHomeById(filters);
   }
 
+  @Roles(UserType.REALTOR, UserType.ADMIN)
+  @UseGuards(AuthGuard)
   @Post()
   createHome(@Body() body: CreateHomeDto, @User() user: UserInfo) {
-    console.log(user);
+    // console.log(user);
     return this.homeService.createHome(body, user.id);
 
     // return user;
@@ -78,13 +84,12 @@ export class HomeController {
     @Param('id', ParseIntPipe) id: number,
     @User() user: UserInfo,
   ) {
-    console.log(id);
     const realtor = await this.homeService.getRealtorByHomeId(id);
 
     if (realtor.id !== user.id) {
       throw new UnauthorizedException('nao podes apagar!');
     }
-    console.log('foi-se');
+    console.log('oh, não! apagámos a casa! foi-se :...X ');
     return this.homeService.deleteHouseById(id);
   }
 }
