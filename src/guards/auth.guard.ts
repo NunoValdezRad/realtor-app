@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     console.log(roles);
 
     // 2- grab JWT from the request header and verify it, if there's any roles inside the roles array => decode the payload and verify if the JWT has the secret we have in our .env file
-    if (roles.length) {
+    if (roles?.length) {
       const request = context.switchToHttp().getRequest();
       const token = request.headers?.authorization?.split('Bearer ')[1];
       try {

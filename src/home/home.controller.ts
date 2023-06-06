@@ -16,6 +16,7 @@ import { HomeService } from './home.service';
 import {
   CreateHomeDto,
   HomeResponseDto,
+  InquireDto,
   UpdateHomeDto,
 } from './dto/home.dto.ts/home.dto';
 import { PropertyType } from '@prisma/client';
@@ -56,8 +57,8 @@ export class HomeController {
     return this.homeService.getHomeById(filters);
   }
 
-  @Roles(UserType.REALTOR, UserType.ADMIN)
-  @UseGuards(AuthGuard)
+  @Roles(UserType.REALTOR)
+  // @UseGuards(AuthGuard)
   @Post()
   createHome(@Body() body: CreateHomeDto, @User() user: UserInfo) {
     // console.log(user);
@@ -66,6 +67,8 @@ export class HomeController {
     // return user;
   }
 
+  @Roles(UserType.REALTOR)
+  // @UseGuards(AuthGuard)
   @Put(':id')
   async updateHome(
     @Param('id', ParseIntPipe) id: number,
@@ -79,6 +82,8 @@ export class HomeController {
     return this.homeService.updateHomeById(id, body);
   }
 
+  @Roles(UserType.REALTOR)
+  // @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteHome(
     @Param('id', ParseIntPipe) id: number,
@@ -92,6 +97,32 @@ export class HomeController {
     console.log('oh, não! apagámos a casa! foi-se :...X ');
     return this.homeService.deleteHouseById(id);
   }
+
+  @Roles(UserType.BUYER)
+  @Post('/:id/inquire')
+  inquire(
+    @Param('id', ParseIntPipe) homeId: number,
+    @User() user: UserInfo,
+    @Body() { message }: InquireDto,
+  ) {
+    return this.homeService.inquire(user, homeId, message);
+  }
+
+  @Roles(UserType.REALTOR)
+  @Get('/:id/messages')
+  async getHomeMessages(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: UserInfo,
+  ) {
+    const realtor = await this.homeService.getRealtorByHomeId(id);
+
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException('nao podes apagar!');
+    }
+
+    return this.homeService.getMessagesByHome(id);
+  }
 }
 
-// Parei aqui porque hoje (dia 26 de Maio) soube que vou para o Rotaro, outro projeto da Rad, e vou colocar isto em pausa!
+// 1- Buyer sends message to a realtor
+// 2- Realtor gets all messages

@@ -15,6 +15,7 @@ const prisma_module_1 = require("./prisma/prisma.module");
 const home_module_1 = require("./home/home.module");
 const core_1 = require("@nestjs/core");
 const user_interceptor_1 = require("./user/interceptors/user.interceptor");
+const auth_guard_1 = require("./guards/auth.guard");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -26,6 +27,10 @@ AppModule = __decorate([
             {
                 provide: core_1.APP_INTERCEPTOR,
                 useClass: user_interceptor_1.UserInterceptor,
+            },
+            {
+                provide: core_1.APP_GUARD,
+                useClass: auth_guard_1.AuthGuard,
             },
         ],
     })

@@ -1,6 +1,7 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HomeResponseDto } from './dto/home.dto.ts/home.dto';
 import { PropertyType } from '@prisma/client';
+import { UserInfo } from 'src/user/decorators/user.decorator';
 interface GetHomesParam {
     city?: string;
     price?: {
@@ -47,5 +48,7 @@ export declare class HomeService {
         email: string;
         phone: string;
     }>;
+    inquire(buyer: UserInfo, homeId: number, message: string): Promise<import(".prisma/client").Message>;
+    getMessagesByHome(homeId: number): import(".prisma/client").Prisma.PrismaPromise<import(".prisma/client").Message[]>;
 }
 export {};

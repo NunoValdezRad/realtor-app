@@ -26,7 +26,7 @@ let AuthGuard = class AuthGuard {
             context.getClass(),
         ]);
         console.log(roles);
-        if (roles.length) {
+        if (roles === null || roles === void 0 ? void 0 : roles.length) {
             const request = context.switchToHttp().getRequest();
             const token = (_b = (_a = request.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.split('Bearer ')[1];
             try {
