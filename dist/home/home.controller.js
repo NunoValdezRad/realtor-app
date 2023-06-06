@@ -57,8 +57,9 @@ let HomeController = class HomeController {
     async getHomeMessages(id, user) {
         const realtor = await this.homeService.getRealtorByHomeId(id);
         if (realtor.id !== user.id) {
-            throw new common_1.UnauthorizedException('nao podes apagar!');
+            throw new common_1.UnauthorizedException('Nop, these messages were not for you');
         }
+        console.log({ user, realtor });
         return this.homeService.getMessagesByHome(id);
     }
 };

@@ -33,7 +33,7 @@ let AuthGuard = class AuthGuard {
                 const payload = (await jwt.verify(token, process.env.JSON_TOKEN_KEY));
                 console.log({
                     payload,
-                    message: 'este é o objecto que existe dentro do auth guard! ',
+                    message: 'This is the payload/user we are grabbing in the auth guard ',
                 });
                 const user = await this.prismaService.user.findUnique({
                     where: {

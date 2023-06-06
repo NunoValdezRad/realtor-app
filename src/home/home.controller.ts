@@ -117,8 +117,9 @@ export class HomeController {
     const realtor = await this.homeService.getRealtorByHomeId(id);
 
     if (realtor.id !== user.id) {
-      throw new UnauthorizedException('nao podes apagar!');
+      throw new UnauthorizedException('Nop, these messages were not for you');
     }
+    console.log({ user, realtor });
 
     return this.homeService.getMessagesByHome(id);
   }

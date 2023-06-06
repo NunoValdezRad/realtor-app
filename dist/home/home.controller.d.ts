@@ -11,5 +11,12 @@ export declare class HomeController {
     updateHome(id: number, user: UserInfo, body: UpdateHomeDto): Promise<HomeResponseDto>;
     deleteHome(id: number, user: UserInfo): Promise<void>;
     inquire(homeId: number, user: UserInfo, { message }: InquireDto): Promise<import(".prisma/client").Message>;
-    getHomeMessages(id: number, user: UserInfo): Promise<import(".prisma/client").Message[]>;
+    getHomeMessages(id: number, user: UserInfo): Promise<{
+        message: string;
+        buyer: {
+            name: string;
+            email: string;
+            phone: string;
+        };
+    }[]>;
 }

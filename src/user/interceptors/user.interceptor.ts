@@ -7,15 +7,15 @@ export class UserInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Promise<Observable<any>> {
-    //NOTA:   qualquer código que punhamos aqui vai interceptar o Request!
+    //NOTA: this code here is going to intercept the Request!
 
     const request = context.switchToHttp().getRequest();
-    const token = request?.headers?.authorization?.split('Bearer ')[1]; //retorna um array, por causa do split, e retiramos o 2º parametro do array, q é o token em si
+    const token = request?.headers?.authorization?.split('Bearer ')[1]; //returns an array, because of the split, and we remove the 2nd parameter of the array, which is the token itself
     const user = await jwt.decode(token);
 
-    request.user = user; //assim criamos a propriedade user, dentro do request feito pelo client... assim, no user.decorator vamos ter acesso ao request feito, e em si vai conter esta propriedade user q adicionámos, com a informação já 'decoded' (descodificada) do user, resultado da intercepção do pedido http feito pelo cliente
+    request.user = user; //so we create the user property, inside the request made by the client... so, in the user.decorator we will have access to the request made, and it will contain this user property that we added, with the already 'decoded' user information, the result of intercepting the http request made by the client
     return next.handle();
 
-    // return handler.handle(/* este handle intercepta a resposta*/);
+    // return handler.handle(/*  handle intercepts the response */);
   }
 }

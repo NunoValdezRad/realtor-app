@@ -43,12 +43,19 @@ export declare class HomeService {
     updateHomeById(id: number, data: UpdateHomeParams): Promise<HomeResponseDto>;
     deleteHouseById(id: number): Promise<void>;
     getRealtorByHomeId(id: number): Promise<{
-        name: string;
         id: number;
+        name: string;
         email: string;
         phone: string;
     }>;
     inquire(buyer: UserInfo, homeId: number, message: string): Promise<import(".prisma/client").Message>;
-    getMessagesByHome(homeId: number): import(".prisma/client").Prisma.PrismaPromise<import(".prisma/client").Message[]>;
+    getMessagesByHome(homeId: number): import(".prisma/client").Prisma.PrismaPromise<{
+        message: string;
+        buyer: {
+            name: string;
+            email: string;
+            phone: string;
+        };
+    }[]>;
 }
 export {};

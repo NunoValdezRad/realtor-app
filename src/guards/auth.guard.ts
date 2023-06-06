@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    // 1- determinar o UserTypes que podem executar determinado endpoint => Comming from CONTEXT! (is comming in the request, and that means we can grat it in the context)
+    // 1- determine the UserTypes that can run a given endpoint => Comming from CONTEXT! (is comming in the request, and that means we can grat it in the context)
     const roles = this.reflector.getAllAndOverride('roles', [
       context.getHandler(),
       context.getClass(),
@@ -37,15 +37,16 @@ export class AuthGuard implements CanActivate {
         )) as JWTPayload;
         console.log({
           payload,
-          message: 'este é o objecto que existe dentro do auth guard! ',
+          message:
+            'This is the payload/user we are grabbing in the auth guard ',
         });
 
         const user = await this.prismaService.user.findUnique({
           where: {
-            id: payload.id,
+            id: payload.id, //because this payload we are getting is the users info
           },
         });
-
+        // console.log({ user_inside_auth_guard: user });
         if (!user) return false;
         if (roles.includes(user.user_type)) return true;
         return false;
@@ -58,7 +59,7 @@ export class AuthGuard implements CanActivate {
     /*
 3- DB request do get user by id
 4- determine if the user has permission 
-(Reflector permite-nos utilizar a Metadata que temos nesta "store", )
+(Reflector allows us to use the Metadata we have in this "store" )
 */
 
     return false;
