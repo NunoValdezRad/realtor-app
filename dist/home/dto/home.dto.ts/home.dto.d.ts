@@ -43,4 +43,7 @@ export declare class UpdateHomeDto {
     landSize?: number;
     propertyType?: PropertyType;
 }
+export declare class InquireDto {
+    message: string;
+}
 export {};

@@ -43,7 +43,7 @@ let HomeService = class HomeService {
             return new home_dto_1.HomeResponseDto(fetchedHome);
         });
     }
-    async createHome({ address, numberOfBathrooms, numberOfBedrooms, city, landSize, propertyType, images, price, }) {
+    async createHome({ address, numberOfBathrooms, numberOfBedrooms, city, landSize, propertyType, images, price, }, userId) {
         const home = await this.prismaService.home.create({
             data: {
                 address,
@@ -53,7 +53,7 @@ let HomeService = class HomeService {
                 land_size: landSize,
                 propertyType,
                 price,
-                realtor_id: 2,
+                realtor_id: userId,
             },
         });
         const homeImages = images.map((image) => {
@@ -83,6 +83,45 @@ let HomeService = class HomeService {
         await this.prismaService.home.delete({
             where: {
                 id,
+            },
+        });
+    }
+    async getRealtorByHomeId(id) {
+        const home = await this.prismaService.home.findUnique({
+            where: {
+                id,
+            },
+            select: {
+                realtor: {
+                    select: {
+                        name: true,
+                        id: true,
+                        email: true,
+                        phone: true,
+                    },
+                },
+            },
+        });
+        if (!home) {
+            throw new common_1.NotFoundException();
+        }
+        return home.realtor;
+    }
+    async inquire(buyer, homeId, message) {
+        const realtor = await this.getRealtorByHomeId(homeId);
+        return await this.prismaService.message.create({
+            data: {
+                realtor_id: realtor.id,
+                buyer_id: buyer.id,
+                home_id: homeId,
+                message,
+            },
+        });
+    }
+    getMessagesByHome(homeId) {
+        return this.prismaService.message.findMany({
+            where: {
+                home_id: homeId,
             },
         });
     }

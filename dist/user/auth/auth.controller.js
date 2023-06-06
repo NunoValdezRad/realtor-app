@@ -16,8 +16,9 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const bcrypt = require("bcryptjs");
-const auth_dto_1 = require("../dto/auth.dto.ts/auth.dto");
+const auth_dto_1 = require("../dtos/auth.dto.ts/auth.dto");
 const client_1 = require("@prisma/client");
+const user_decorator_1 = require("../decorators/user.decorator");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -40,6 +41,9 @@ let AuthController = class AuthController {
     }
     generateProductKey({ email, userType }) {
         return this.authService.generateProductKey(email, userType);
+    }
+    me(user) {
+        return user;
     }
 };
 __decorate([
@@ -64,6 +68,13 @@ __decorate([
     __metadata("design:paramtypes", [auth_dto_1.GenerateProductKeyDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "generateProductKey", null);
+__decorate([
+    (0, common_1.Get)('/me'),
+    __param(0, (0, user_decorator_1.User)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "me", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

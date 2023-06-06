@@ -14,9 +14,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomeController = void 0;
 const common_1 = require("@nestjs/common");
+const client_1 = require("@prisma/client");
 const home_service_1 = require("./home.service");
 const home_dto_1 = require("./dto/home.dto.ts/home.dto");
-const client_1 = require("@prisma/client");
+const client_2 = require("@prisma/client");
+const user_decorator_1 = require("../user/decorators/user.decorator");
+const roles_decorator_1 = require("../decorators/roles.decorator");
 let HomeController = class HomeController {
     constructor(homeService) {
         this.homeService = homeService;
@@ -30,24 +33,43 @@ let HomeController = class HomeController {
         const filters = Object.assign(Object.assign(Object.assign({}, (city && { city })), (price && { price })), (propertyType && { propertyType }));
         return this.homeService.getHomeById(filters);
     }
-    createHome(body) {
-        return this.homeService.createHome(body);
+    createHome(body, user) {
+        return this.homeService.createHome(body, user.id);
     }
-    updateHome(id, body) {
+    async updateHome(id, user, body) {
+        const realtor = await this.homeService.getRealtorByHomeId(id);
+        if (realtor.id !== user.id) {
+            throw new common_1.UnauthorizedException();
+        }
         return this.homeService.updateHomeById(id, body);
     }
-    deleteHome(id) {
+    async deleteHome(id, user) {
+        const realtor = await this.homeService.getRealtorByHomeId(id);
+        if (realtor.id !== user.id) {
+            throw new common_1.UnauthorizedException('nao podes apagar!');
+        }
+        console.log('oh, não! apagámos a casa! foi-se :...X ');
         return this.homeService.deleteHouseById(id);
+    }
+    inquire(homeId, user, { message }) {
+        return this.homeService.inquire(user, homeId, message);
+    }
+    async getHomeMessages(id, user) {
+        const realtor = await this.homeService.getRealtorByHomeId(id);
+        if (realtor.id !== user.id) {
+            throw new common_1.UnauthorizedException('nao podes apagar!');
+        }
+        return this.homeService.getMessagesByHome(id);
     }
 };
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], HomeController.prototype, "getAllHomes", null);
 __decorate([
-    (0, common_1.Get)(''),
+    (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Query)('city')),
     __param(1, (0, common_1.Query)('minPrice')),
     __param(2, (0, common_1.Query)('maxPrice')),
@@ -57,27 +79,52 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], HomeController.prototype, "getHomeById", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserType.REALTOR),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [home_dto_1.CreateHomeDto]),
+    __metadata("design:paramtypes", [home_dto_1.CreateHomeDto, Object]),
     __metadata("design:returntype", void 0)
 ], HomeController.prototype, "createHome", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserType.REALTOR),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.User)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, home_dto_1.UpdateHomeDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, Object, home_dto_1.UpdateHomeDto]),
+    __metadata("design:returntype", Promise)
 ], HomeController.prototype, "updateHome", null);
 __decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserType.REALTOR),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, user_decorator_1.User)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
 ], HomeController.prototype, "deleteHome", null);
+__decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserType.BUYER),
+    (0, common_1.Post)('/:id/inquire'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, user_decorator_1.User)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object, home_dto_1.InquireDto]),
+    __metadata("design:returntype", void 0)
+], HomeController.prototype, "inquire", null);
+__decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserType.REALTOR),
+    (0, common_1.Get)('/:id/messages'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, user_decorator_1.User)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], HomeController.prototype, "getHomeMessages", null);
 HomeController = __decorate([
     (0, common_1.Controller)('home'),
     __metadata("design:paramtypes", [home_service_1.HomeService])

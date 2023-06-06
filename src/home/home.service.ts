@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HomeResponseDto } from './dto/home.dto.ts/home.dto';
-import { PropertyType } from '@prisma/client';
+import { PropertyType, UserType } from '@prisma/client';
+import { UserInfo } from 'src/user/decorators/user.decorator';
 
 interface GetHomesParam {
   city?: string;
@@ -66,16 +67,19 @@ export class HomeService {
     });
   }
 
-  async createHome({
-    address,
-    numberOfBathrooms,
-    numberOfBedrooms,
-    city,
-    landSize,
-    propertyType,
-    images,
-    price,
-  }: CreateHomeParams) {
+  async createHome(
+    {
+      address,
+      numberOfBathrooms,
+      numberOfBedrooms,
+      city,
+      landSize,
+      propertyType,
+      images,
+      price,
+    }: CreateHomeParams,
+    userId: number,
+  ) {
     const home = await this.prismaService.home.create({
       data: {
         address,
@@ -85,7 +89,7 @@ export class HomeService {
         land_size: landSize,
         propertyType,
         price,
-        realtor_id: 2,
+        realtor_id: userId,
       },
     });
     const homeImages = images.map((image) => {
@@ -128,6 +132,49 @@ export class HomeService {
     await this.prismaService.home.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  async getRealtorByHomeId(id: number) {
+    const home = await this.prismaService.home.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        realtor: {
+          select: {
+            name: true,
+            id: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
+    if (!home) {
+      throw new NotFoundException();
+    }
+    return home.realtor;
+  }
+
+  async inquire(buyer: UserInfo, homeId: number, message: string) {
+    const realtor = await this.getRealtorByHomeId(homeId);
+
+    return await this.prismaService.message.create({
+      data: {
+        realtor_id: realtor.id,
+        buyer_id: buyer.id,
+        home_id: homeId,
+        message,
+      },
+    });
+  }
+
+  getMessagesByHome(homeId: number) {
+    return this.prismaService.message.findMany({
+      where: {
+        home_id: homeId,
       },
     });
   }
